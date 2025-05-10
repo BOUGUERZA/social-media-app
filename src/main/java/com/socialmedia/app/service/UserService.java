@@ -69,4 +69,44 @@ public class UserService {
     public User updateProfile(User user) {
         return userRepository.save(user);
     }
+    
+    public User blockUser(User currentUser, User userToBlock) {
+        if (!currentUser.getBlockedUsers().contains(userToBlock)) {
+            // Add to blocked users
+            currentUser.getBlockedUsers().add(userToBlock);
+            
+            // Remove from following if they were following
+            if (currentUser.getFollowing().contains(userToBlock)) {
+                unfollowUser(currentUser, userToBlock);
+            }
+            
+            // Remove from followers if they were followers
+            if (userToBlock.getFollowing().contains(currentUser)) {
+                unfollowUser(userToBlock, currentUser);
+            }
+            
+            return userRepository.save(currentUser);
+        }
+        return currentUser;
+    }
+    
+    public User unblockUser(User currentUser, User userToUnblock) {
+        if (currentUser.getBlockedUsers().contains(userToUnblock)) {
+            currentUser.getBlockedUsers().remove(userToUnblock);
+            return userRepository.save(currentUser);
+        }
+        return currentUser;
+    }
+    
+    public List<User> getBlockedUsers(User user) {
+        return user.getBlockedUsers();
+    }
+    
+    public boolean isUserBlocked(User user, User potentiallyBlockedUser) {
+        return user.getBlockedUsers().contains(potentiallyBlockedUser);
+    }
+    
+    public List<User> searchUsersByUsernameOrDisplayName(String searchTerm) {
+        return userRepository.findByUsernameContainingOrDisplayNameContaining(searchTerm, searchTerm);
+    }
 }

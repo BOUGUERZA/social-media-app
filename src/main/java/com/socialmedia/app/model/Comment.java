@@ -2,6 +2,8 @@ package com.socialmedia.app.model;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "comments")
@@ -24,6 +26,9 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
+    
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    private List<Like> likes = new ArrayList<>();
     
     // Constructors
     public Comment() {
@@ -68,5 +73,13 @@ public class Comment {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+    
+    public List<Like> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<Like> likes) {
+        this.likes = likes;
     }
 }

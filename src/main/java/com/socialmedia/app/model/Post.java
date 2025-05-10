@@ -3,7 +3,9 @@ package com.socialmedia.app.model;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "posts")
@@ -31,6 +33,9 @@ public class Post {
 
     @Column(name = "image_url")
     private String imageUrl;
+    
+    @ManyToMany(mappedBy = "posts")
+    private Set<Hashtag> hashtags = new HashSet<>();
     
     // Constructors
     public Post() {
@@ -91,5 +96,23 @@ public class Post {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+    
+    public Set<Hashtag> getHashtags() {
+        return hashtags;
+    }
+
+    public void setHashtags(Set<Hashtag> hashtags) {
+        this.hashtags = hashtags;
+    }
+    
+    public void addHashtag(Hashtag hashtag) {
+        this.hashtags.add(hashtag);
+        hashtag.addPost(this);
+    }
+    
+    public void removeHashtag(Hashtag hashtag) {
+        this.hashtags.remove(hashtag);
+        hashtag.removePost(this);
     }
 }

@@ -1,5 +1,6 @@
 package com.socialmedia.app.service;
 
+import com.socialmedia.app.model.Hashtag;
 import com.socialmedia.app.model.Post;
 import com.socialmedia.app.model.User;
 import com.socialmedia.app.repository.PostRepository;
@@ -14,13 +15,17 @@ import java.util.Optional;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final HashtagService hashtagService;
 
     @Autowired
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, HashtagService hashtagService) {
         this.postRepository = postRepository;
+        this.hashtagService = hashtagService;
     }
 
     public Post createPost(Post post) {
+        // Process hashtags in the post content
+        hashtagService.processHashtagsInPost(post);
         return postRepository.save(post);
     }
 
@@ -47,6 +52,17 @@ public class PostService {
     }
 
     public Post updatePost(Post post) {
+        // Clear existing hashtags and re-process
+        post.getHashtags().clear();
+        hashtagService.processHashtagsInPost(post);
         return postRepository.save(post);
+    }
+    
+    public List<Post> findPostsByHashtag(String hashtagName) {
+        return hashtagService.findPostsByHashtag(hashtagName);
+    }
+    
+    public List<Post> searchPostsByKeyword(String keyword) {
+        return postRepository.findByContentContainingOrderByCreatedAtDesc(keyword);
     }
 }

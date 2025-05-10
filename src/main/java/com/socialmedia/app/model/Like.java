@@ -19,8 +19,12 @@ public class Like {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", nullable = false)
+    @JoinColumn(name = "post_id")
     private Post post;
+    
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
     
     // Constructors
     public Like() {
@@ -57,5 +61,13 @@ public class Like {
 
     public void setPost(Post post) {
         this.post = post;
+    }
+    
+    public Comment getComment() {
+        return comment;
+    }
+
+    public void setComment(Comment comment) {
+        this.comment = comment;
     }
 }

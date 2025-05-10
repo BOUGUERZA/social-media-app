@@ -44,6 +44,17 @@ public class User {
     @ManyToMany(mappedBy = "followers")
     private List<User> following = new ArrayList<>();
     
+    @ManyToMany
+    @JoinTable(
+        name = "user_blocks",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "blocked_user_id")
+    )
+    private List<User> blockedUsers = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<LoginRecord> loginRecords = new ArrayList<>();
+    
     // Constructors
     public User() {
     }
@@ -135,5 +146,21 @@ public class User {
 
     public void setFollowing(List<User> following) {
         this.following = following;
+    }
+    
+    public List<User> getBlockedUsers() {
+        return blockedUsers;
+    }
+
+    public void setBlockedUsers(List<User> blockedUsers) {
+        this.blockedUsers = blockedUsers;
+    }
+    
+    public List<LoginRecord> getLoginRecords() {
+        return loginRecords;
+    }
+
+    public void setLoginRecords(List<LoginRecord> loginRecords) {
+        this.loginRecords = loginRecords;
     }
 }

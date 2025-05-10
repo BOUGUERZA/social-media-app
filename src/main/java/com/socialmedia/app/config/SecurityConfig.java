@@ -1,7 +1,9 @@
 package com.socialmedia.app.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -12,6 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+    
+    @Autowired
+    public SecurityConfig(@Lazy CustomAuthenticationSuccessHandler authenticationSuccessHandler) {
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -21,7 +30,7 @@ public class SecurityConfig {
                 .and()
             .formLogin()
                 .loginPage("/login")
-                .defaultSuccessUrl("/home", true)
+                .successHandler(authenticationSuccessHandler)
                 .permitAll()
                 .and()
             .logout()
