@@ -115,4 +115,14 @@ public class Post {
         this.hashtags.remove(hashtag);
         hashtag.removePost(this);
     }
+    
+    // Helper method to get a list of user IDs who liked this post
+    // This is used in Thymeleaf templates to check if a user has liked a post
+    public List<Long> getLikedByUserIds() {
+        List<Long> userIds = new ArrayList<>();
+        for (Like like : this.likes) {
+            userIds.add(like.getUser().getId());
+        }
+        return userIds;
+    }
 }

@@ -120,13 +120,13 @@
                                 <a th:href="@{'/posts/' + ${post.id}}" class="btn btn-sm btn-outline-secondary me-2">
                                     <i class="bi bi-chat"></i> <span th:text="${post.comments.size()}">0</span>
                                 </a>
-                                <form th:if="${!post.likes.stream().anyMatch(like -> like.user.id == currentUser.id)}" 
+                                <form th:if="${#lists.isEmpty(post.likes) || !#lists.contains(post.likedByUserIds, currentUser.id)}" 
                                       th:action="@{'/posts/' + ${post.id} + '/like'}" method="post">
                                     <button type="submit" class="btn btn-sm btn-outline-danger">
                                         <i class="bi bi-heart"></i> <span th:text="${post.likes.size()}">0</span>
                                     </button>
                                 </form>
-                                <form th:if="${post.likes.stream().anyMatch(like -> like.user.id == currentUser.id)}" 
+                                <form th:if="${!#lists.isEmpty(post.likes) && #lists.contains(post.likedByUserIds, currentUser.id)}" 
                                       th:action="@{'/posts/' + ${post.id} + '/unlike'}" method="post">
                                     <button type="submit" class="btn btn-sm btn-danger">
                                         <i class="bi bi-heart-fill"></i> <span th:text="${post.likes.size()}">0</span>

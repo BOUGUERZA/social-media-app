@@ -109,4 +109,23 @@ public class UserService {
     public List<User> searchUsersByUsernameOrDisplayName(String searchTerm) {
         return userRepository.findByUsernameContainingOrDisplayNameContaining(searchTerm, searchTerm);
     }
+    
+    public List<User> findUserSuggestions(User currentUser) {
+        List<User> allUsers = userRepository.findAll();
+        List<User> suggestions = new java.util.ArrayList<>();
+        
+        for (User user : allUsers) {
+            // Skip if it's the current user or if the current user already follows this user
+            if (user.getId().equals(currentUser.getId()) || 
+                currentUser.getFollowing().contains(user) || 
+                currentUser.getBlockedUsers().contains(user)) {
+                continue;
+            }
+            
+            // Add to suggestions
+            suggestions.add(user);
+        }
+        
+        return suggestions;
+    }
 }

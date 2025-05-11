@@ -82,4 +82,14 @@ public class Comment {
     public void setLikes(List<Like> likes) {
         this.likes = likes;
     }
+    
+    // Helper method to get a list of user IDs who liked this comment
+    // This is used in Thymeleaf templates to check if a user has liked a comment
+    public List<Long> getLikedByUserIds() {
+        List<Long> userIds = new ArrayList<>();
+        for (Like like : this.likes) {
+            userIds.add(like.getUser().getId());
+        }
+        return userIds;
+    }
 }
