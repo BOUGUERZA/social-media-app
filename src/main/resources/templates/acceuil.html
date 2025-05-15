@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIRAJ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px 30px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .logo img {
+            height: 50px;
+            width:180px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin-left:10px;
+            max-width: 500px;
+            /*margin: 0 40px;*/
+            background-color: #f0f0f0;
+            border-radius: 30px;
+            padding: 5px 15px;
+        }
+
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 14px;
+        }
+        .search-bar .search-icon {
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .search-bar .search-icon:hover{
+            background-color: #dfdede;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-container {
+            width: 32px;
+            height: 32px;
+            color: #25407c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .icon-container:hover {
+            background-color: rgba(226, 88, 34, 0.1);
+            border-radius: 50%;
+        }
+
+        .profile-icon {
+            background-color: #25407c;
+            color: white;
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+        }
+
+        .icon-container {
+            margin: 0 10px;
+            width: 35px;
+            height: 35px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .icon-container svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .profile-icon {
+            width: 35px;
+            height: 35px;
+            background-color: #ddd;
+            border-radius: 50%;
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .main-container {
+            display: flex;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .sidebar h3 {
+            margin-top: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            font-size: 18px;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            padding: 10px 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #4a90e2;
+        }
+
+        .nav-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .new-post-btn {
+            background-color: #8dcde3;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px;
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            margin: 15px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .new-post-btn:hover {
+            background-color: #7cb9cc;
+        }
+
+        .trends {
+            margin-top: 20px;
+        }
+
+        .trends h3 {
+            margin-bottom: 15px;
+        }
+
+        .hashtags {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .hashtag-item {
+            margin-bottom: 10px;
+        }
+
+        .hashtag-link {
+            text-decoration: none;
+            color: #4a90e2;
+            font-size: 14px;
+        }
+
+        .hashtag-link:hover {
+            text-decoration: underline;
+        }
+
+        .see-more {
+            text-decoration: none;
+            color: #777;
+            font-size: 14px;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .see-more:hover {
+            text-decoration: underline;
+        }
+
+        .left-sidebar {
+            flex: 0.25;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-right: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            color: #333;
+        }
+
+        .nav-item:hover {
+            background-color: #f0f2f5;
+        }
+
+        .nav-item svg {
+            width: 22px;
+            height: 22px;
+            margin-right: 12px;
+        }
+
+        .nav-item span {
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .feed {
+            flex: 0.5;
+        }
+        .publish-button.checked {
+            background-color: #79bad6;
+            color: white;
+            cursor: pointer;
+        }
+        .status-box {
+            background-color: #ffffff;
+            border-radius: 16px;
+            padding: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e8ed;
+            max-width: 600px;
+            margin-bottom: 20px;
+
+        }
+
+        .status-input-area {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e6eef5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #657786;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .post-image {
+            width: 95%;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .status-input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            color: #14171a;
+            padding: 10px;
+        }
+
+        .status-input::placeholder {
+            color: #657786;
+            font-size: 18px;
+        }
+
+        .status-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 12px;
+        }
+
+        .status-tools {
+            display: flex;
+            gap: 15px;
+        }
+        .tool-button img {
+            width: 22px;
+            height: 22px;
+        }
+
+        .publish-button {
+            background-color: #8dcde3;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .publish-button:hover {
+            background-color: #7cbfd5;
+        }
+
+        .publish-button:disabled {
+            background-color: #a5d7e8;
+            cursor: default;
+            opacity: 0.7;
+        }
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+
+        .post-option {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        .no-posts {
+            text-align: center;
+            font-style: italic;
+            color: #666;
+        }
+
+        .publish-button {
+            background-color: #a8d8e0;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: auto;
+            display: block;
+        }
+
+        .posts-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-user-info {
+            margin-left: 10px;
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: bold;
+        }
+
+        .post-user-handle, .post-time {
+            color: #65676b;
+            font-size: 14px;
+        }
+
+        .post-content {
+            margin-bottom: 15px;
+            font-size: 15px;
+            line-height: 1.4;
+        }
+
+        .post-stats {
+            display: flex;
+            align-items: center;
+            color: #65676b;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+
+        .stat svg {
+            margin-right: 5px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .right-sidebar {
+            flex: 0.25;
+            margin-left: 20px;
+        }
+
+        .who-to-follow {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .follow-suggestion {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .follow-user-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .follow-button {
+            background-color: #a8d8e0;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .see-more {
+            color: #65676b;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .trending-topics {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .topic {
+            margin-bottom: 15px;
+        }
+
+        .topic-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .topic-posts {
+            color: #65676b;
+            font-size: 14px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #65676b;
+            text-align: center;
+            margin-top: 20px;
+            padding: 0 20px 20px;
+        }
+
+        .footer a {
+            color: #65676b;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+        .post-options {
+            position: relative;
+            display: inline-block;
+            float: right;
+        }
+
+        .options-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 0.5rem;
+            z-index: 100;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            min-width: 150px;
+        }
+
+        .dropdown-menu .dropdown-item {
+            display: block;
+            padding: 0.5rem;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .dropdown-menu .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <img th:src="@{/images/Logo.png}" alt="Logo">
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher sur Siraj...">
+            <button class="search-icon">
+                🔍
+            </button>
+        </div>
+        <div class="header-icons">
+            <div class="icon-container" title="Dashboard">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 9l10 7 10-7-10-7zm0 16l-8-6v7l8 5 8-5v-7l-8 6z"/>
+                </svg>
+            </div>
+            <div class="icon-container" title="Notifications">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5S10.5 3.17 10.5 4v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+            </div>
+            <div class="icon-container" title="Messages">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+            </div>
+            <div class="profile-icon" title="Profil">P</div>
+        </div>
+    </div>
+
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <h3>Navigation</h3>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">🏠</span> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">🔍</span> Explorer
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">🔔</span> Notifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">✉️</span> Messages
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📌</span> Enregistrements
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">👤</span> Profil
+                    </a>
+                </li>
+            </ul>
+
+            <button class="new-post-btn">Nouveau Post</button>
+
+            <div class="trends">
+                <h3>Tendances</h3>
+                <ul class="hashtags">
+                    <li class="hashtag-item">
+                        <a href="#" class="hashtag-link">#Technology</a>
+                    </li>
+                    <li class="hashtag-item">
+                        <a href="#" class="hashtag-link">#Siraj</a>
+                    </li>
+                    <li class="hashtag-item">
+                        <a href="#" class="hashtag-link">#SocialMedia</a>
+                    </li>
+                    <li class="hashtag-item">
+                        <a href="#" class="hashtag-link">#Web3</a>
+                    </li>
+                </ul>
+                <a href="#" class="see-more">Voir plus...</a>
+            </div>
+        </div>
+
+        <!-- Feed -->
+        <div class="feed">
+
+            <form th:action="@{/posts/create}" method="post" enctype="multipart/form-data">
+                <div class="status-box">
+                    <div class="status-input-area">
+                        <div class="avatar">Vous</div>
+                        <input type="text" id="status-input" name="content" class="status-input" placeholder="Qu'avez-vous en tête ?" required>
+                    </div>
+                    <div class="status-actions">
+                        <div class="status-tools">
+                            <label>
+                                <img th:src="@{/images/img.png}" alt="Photo" class="post-option">
+                                <input type="file" name="image" accept="image/*" style="display: none;">
+                            </label>
+                        </div>
+                        <button id="publish-btn" class="publish-button" type="submit" disabled>Publier</button>
+
+                    </div>
+                </div>
+            </form>
+
+
+            <div class="posts-container">
+                <div th:if="${#lists.isEmpty(posts)}" class="no-posts post-content" style="text-align:center; padding: 2rem;">
+                    Aucune publication pour le moment.
+                </div>
+                <div th:if="${!#lists.isEmpty(posts)}">
+                    <div th:each="post : ${posts}" class="post">
+                        <div class="post-header">
+                            <div class="user-avatar" th:text="${post.avatar}"></div>
+                            <div class="post-user-info">
+                                <span class="post-user-name" th:text="${post.name}"></span>
+                                <span class="post-user-handle" th:text="${post.handle}"></span>
+                                <span class="post-time" th:if="${post.time != null}">• <span th:text="${post.time}"></span></span>
+                            </div>
+                            <!-- Options menu -->
+                            <div class="post-options">
+                                <button class="options-btn" onclick="toggleDropdown(this)">⋮</button>
+                                <div class="dropdown-menu" style="display: none;">
+                                    <form th:action="@{'/posts/' + ${post.id} + '/save'}" method="post" style="margin: 0;">
+                                        <button type="submit" class="dropdown-item">Enregistrer le post</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="post-content" th:text="${post.content}"></div>
+
+                        <img th:if="${post.image != null}" th:src="@{${post.image}}" class="post-image" />
+
+                        <div class="post-stats">
+                            <div class="stat" th:if="${post.comments != null}">💬 <span th:text="${post.comments}"></span></div>
+                            <div class="stat" th:if="${post.retweets != null}">🔁 <span th:text="${post.retweets}"></span></div>
+                            <div class="stat" th:if="${post.likes != null}">❤️ <span th:text="${post.likes}"></span></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="who-to-follow">
+                <div class="sidebar-title">Qui suivre</div>
+                
+                <div class="follow-suggestion">
+                    <div class="user-avatar">TN</div>
+                    <div class="follow-user-info">
+                        <div class="post-user-name">Tech News</div>
+                        <div class="post-user-handle">@technews</div>
+                    </div>
+                    <button class="follow-button">Suivre</button>
+                </div>
+                
+                <div class="follow-suggestion">
+                    <div class="user-avatar">ML</div>
+                    <div class="follow-user-info">
+                        <div class="post-user-name">Marie Lambert</div>
+                        <div class="post-user-handle">@mlambert</div>
+                    </div>
+                    <button class="follow-button">Suivre</button>
+                </div>
+                
+                <div class="follow-suggestion">
+                    <div class="user-avatar">JD</div>
+                    <div class="follow-user-info">
+                        <div class="post-user-name">Jean Dupont</div>
+                        <div class="post-user-handle">@jdupont</div>
+                    </div>
+                    <button class="follow-button">Suivre</button>
+                </div>
+                
+                <div class="see-more">Voir plus...</div>
+            </div>
+            
+            <div class="trending-topics">
+                <div class="sidebar-title">Sujets Populaires</div>
+                
+                <div class="topic">
+                    <div class="topic-title">Technologie</div>
+                    <div class="topic-posts">10k posts</div>
+                </div>
+                
+                <div class="topic">
+                    <div class="topic-title">Siraj Lancement</div>
+                    <div class="topic-posts">5.2k posts</div>
+                </div>
+                
+                <div class="topic">
+                    <div class="topic-title">Innovation Web</div>
+                    <div class="topic-posts">3.7k posts</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <a href="#">Conditions</a> •
+        <a href="#">Confidentialité</a> •
+        <a href="#">Cookies</a> •
+        <a href="#">À propos</a> •
+        © 2025 Siraj
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const input = document.getElementById("status-input");
+            const button = document.getElementById("publish-btn");
+
+            input.addEventListener("input", function () {
+                if (input.value.trim() !== "") {
+                    button.disabled = false;
+                    button.classList.add("checked");
+                } else {
+                    button.disabled = true;
+                    button.classList.remove("checked");
+                }
+            });
+        });
+        function toggleDropdown(button) {
+            const dropdown = button.nextElementSibling;
+            const isVisible = dropdown.style.display === 'block';
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.style.display = 'none';
+            });
+            dropdown.style.display = isVisible ? 'none' : 'block';
+        }
+    </script>
+
+</body>
+</html>

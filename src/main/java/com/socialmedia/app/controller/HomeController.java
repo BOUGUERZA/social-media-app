@@ -43,7 +43,7 @@ public class HomeController {
             List<Post> feedPosts = postService.findPostsForUserFeed(currentUser);
             model.addAttribute("posts", feedPosts);
             model.addAttribute("currentUser", currentUser);
-            return "home";
+            return "acceuil";
         }
         
         return "redirect:/login";

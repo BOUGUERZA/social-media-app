@@ -36,6 +36,7 @@ public class Post {
     
     @ManyToMany(mappedBy = "posts")
     private Set<Hashtag> hashtags = new HashSet<>();
+
     
     // Constructors
     public Post() {
