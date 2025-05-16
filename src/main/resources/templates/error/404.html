@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<head>
+    <title>Page non trouvée</title>
+    <th:block layout:fragment="custom-css">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 50px 0;
+        }
+        .error-code {
+            font-size: 8rem;
+            font-weight: bold;
+            color: #17a2b8;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+        }
+        .error-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #17a2b8;
+        }
+        .suggestions {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+    </style>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="error-container">
+            <div class="error-icon">
+                <i class="bi bi-search"></i>
+            </div>
+            <div class="error-code">404</div>
+            <div class="error-message">Page non trouvée</div>
+            <p>La page que vous recherchez n'existe pas ou a été déplacée.</p>
+            
+            <div class="suggestions">
+                <h4>Suggestions :</h4>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check2-circle"></i> Vérifiez l'URL que vous avez saisie</li>
+                    <li><i class="bi bi-check2-circle"></i> Retournez à la page précédente</li>
+                    <li><i class="bi bi-check2-circle"></i> Visitez notre page d'accueil</li>
+                </ul>
+            </div>
+            
+            <div class="mt-4">
+                <a href="javascript:history.back()" class="btn btn-outline-primary mr-2">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+                <a href="/home" class="btn btn-primary">
+                    <i class="bi bi-house"></i> Accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

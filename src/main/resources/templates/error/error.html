@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<head>
+    <title>Erreur</title>
+    <th:block layout:fragment="custom-css">
+    <style>
+        .error-container {
+            text-align: center;
+            padding: 80px 0;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .error-illustration {
+            max-width: 250px;
+            margin-bottom: 30px;
+        }
+        .error-code {
+            font-size: 5rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #3b82f6, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            margin-bottom: 10px;
+            line-height: 1;
+        }
+        .error-message {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1f2937;
+        }
+        .error-details {
+            margin-bottom: 30px;
+            color: #6b7280;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        .home-button {
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            background: linear-gradient(45deg, #4f46e5, #8b5cf6);
+            border: none;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            transition: all 0.3s ease;
+        }
+        .home-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
+        }
+    </style>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="error-container">
+            <img src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569_960_720.jpg" alt="Error Illustration" class="error-illustration img-fluid">
+            <div class="error-code" th:text="${status != null ? status : '500'}">500</div>
+            <div class="error-message" th:text="${error != null ? error : 'Oups ! Une erreur est survenue'}">Erreur interne du serveur</div>
+            <div class="error-details" th:if="${message != null}" th:text="${message}">Nous sommes désolés, mais quelque chose s'est mal passé. Veuillez réessayer ou retourner à la page d'accueil.</div>
+            <a href="/home" class="btn home-button">
+                <i class="bi bi-house-door me-2"></i> Retour à l'accueil
+            </a>
+        </div>
+    </div>
+</body>
+</html>

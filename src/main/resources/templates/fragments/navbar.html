@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <!-- Navigation Bar Fragment -->
+    <nav th:fragment="navbar(activeTab)" class="navbar navbar-expand-lg navbar-light shadow-sm sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/home">
+                <i class="bi bi-chat-square-dots"></i>SocialApp
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item mx-1">
+                        <a class="nav-link" th:classappend="${activeTab == 'home' ? 'active fw-bold' : ''}" href="/home">
+                            <i class="bi bi-house-door"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link" th:classappend="${activeTab == 'create' ? 'active fw-bold' : ''}" href="/posts/create">
+                            <i class="bi bi-plus-square"></i> Nouveau Post
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link" th:classappend="${activeTab == 'explore' ? 'active fw-bold' : ''}" href="/users/suggestions">
+                            <i class="bi bi-compass"></i> Explorer
+                        </a>
+                    </li>
+                    <li class="nav-item mx-1">
+                        <a class="nav-link" th:classappend="${activeTab == 'following' ? 'active fw-bold' : ''}" href="/users/following">
+                            <i class="bi bi-people"></i> Abonnements
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <a href="/posts/create" class="btn btn-primary rounded-pill me-3 d-none d-md-block">
+                        <i class="bi bi-plus-lg"></i> Créer
+                    </a>
+                    <div class="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div class="avatar-sm me-2 bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">
+                                <span th:text="${currentUser != null ? currentUser.username.substring(0,1).toUpperCase() : 'U'}">U</span>
+                            </div>
+                            <span class="d-none d-md-inline" th:text="${currentUser != null ? currentUser.username : 'Utilisateur'}">Username</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end animate__animated animate__fadeIn" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" th:href="@{'/users/' + ${currentUser != null ? currentUser.username : ''}}">
+                                <i class="bi bi-person"></i> Mon Profil
+                            </a></li>
+                            <li><a class="dropdown-item" href="/users/profile/edit">
+                                <i class="bi bi-gear"></i> Paramètres
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form action="/logout" method="post">
+                                    <button type="submit" class="dropdown-item text-danger">
+                                        <i class="bi bi-box-arrow-right"></i> Déconnexion
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>
