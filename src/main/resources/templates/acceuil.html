@@ -597,7 +597,7 @@
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
                 </svg>
             </div>
-            <div class="profile-icon" title="Profil">P</div>
+            <a th:href="@{'/users/' + ${#authentication.name}}" class="profile-icon" title="Profil">P</a>
         </div>
     </div>
 
@@ -634,7 +634,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a th:href="@{'/users/' + ${#authentication.name}}" class="nav-link">
                         <span class="nav-icon">👤</span> Profil
                     </a>
                 </li>
