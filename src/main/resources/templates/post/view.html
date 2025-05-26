@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post - SIRAJ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+
+        .post {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e6eef5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            color: #657786;
+            font-size: 12px;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: bold;
+            color: #14171a;
+            font-size: 15px;
+        }
+
+        .post-time {
+            color: #657786;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .post-content {
+            color: #14171a;
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .post-image {
+            max-width: 100%;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+
+        .post-stats {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            border-top: 1px solid #e1e8ed;
+            padding-top: 10px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            color: #657786;
+            margin-right: 20px;
+        }
+
+        .like-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 5px;
+            margin-right: 5px;
+            transition: transform 0.2s ease;
+        }
+
+        .like-button:hover {
+            transform: scale(1.2);
+        }
+
+        .like-button.liked {
+            color: #e0245e;
+        }
+
+        .comments-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e1e8ed;
+        }
+
+        .comment-form {
+            margin-bottom: 15px;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #e1e8ed;
+            border-radius: 20px;
+            resize: none;
+            min-height: 40px;
+        }
+
+        .comment-submit {
+            background-color: #8dcde3;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .comment-submit:hover {
+            background-color: #7cbfd5;
+        }
+
+        .comments-list {
+            margin-top: 10px;
+        }
+
+        .comment {
+            padding: 10px;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .comment-user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: #e6eef5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+
+        .comment-user-info {
+            flex: 1;
+        }
+
+        .comment-user-name {
+            font-weight: bold;
+            font-size: 14px;
+            color: #14171a;
+        }
+
+        .comment-time {
+            font-size: 12px;
+            color: #657786;
+            margin-left: 5px;
+        }
+
+        .comment-content {
+            font-size: 14px;
+            color: #14171a;
+            margin-left: 42px;
+            word-break: break-word;
+        }
+
+        .no-comments {
+            text-align: center;
+            color: #657786;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #8dcde3;
+            color: white;
+            text-decoration: none;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .back-button:hover {
+            background-color: #7cbfd5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/home" class="back-button">← Retour</a>
+        
+        <div class="post">
+            <div class="post-header">
+                <div class="user-avatar">
+                    <img th:if="${post.avatar != null}" th:src="${post.avatar}" alt="Avatar" class="avatar-image">
+                    <span th:unless="${post.avatar != null}" th:text="${#strings.substring(post.name,0,1)}">U</span>
+                </div>
+                <div class="post-user-info">
+                    <span class="post-user-name" th:text="${post.name}">Name</span>
+                    <span class="post-time" th:if="${post.time != null}">
+                        <span th:text="${#temporals.format(post.time, 'dd/MM/yyyy HH:mm')}">time</span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="post-content" th:text="${post.content}"></div>
+
+            <div th:if="${post.image != null && !post.image.isEmpty()}" class="post-image-container">
+                <img th:src="${post.image}" alt="Image du post" class="post-image">
+            </div>
+
+            <div class="post-stats">
+                <div class="stat">
+                    <form th:action="@{'/posts/' + ${post.id} + '/like'}" method="post" style="display: inline;">
+                        <button type="submit" class="like-button" th:classappend="${post.likes > 0 ? 'liked' : ''}">
+                            <span th:if="${post.likes > 0}">❤️</span>
+                            <span th:unless="${post.likes > 0}">🤍</span>
+                        </button>
+                        <span th:text="${post.likes}">0</span>
+                    </form>
+                </div>
+                <div class="stat">
+                    💬 <span th:text="${post.comments}">0</span>
+                </div>
+            </div>
+
+            <div class="comments-section">
+                <form th:action="@{/comments/create}" method="post" class="comment-form">
+                    <input type="hidden" name="postId" th:value="${post.id}">
+                    <div class="comment-input-container">
+                        <textarea name="content" class="comment-input" placeholder="Ajouter un commentaire..." required></textarea>
+                        <button type="submit" class="comment-submit">Publier</button>
+                    </div>
+                </form>
+
+                <div class="comments-list" th:if="${post.commentList != null && !post.commentList.isEmpty()}">
+                    <div th:each="comment : ${post.commentList}" class="comment">
+                        <div class="comment-header">
+                            <div class="comment-user-avatar">
+                                <img th:if="${comment.userAvatar != null}" th:src="${comment.userAvatar}" alt="Avatar" class="avatar-image">
+                                <span th:unless="${comment.userAvatar != null}" th:text="${#strings.substring(comment.userName,0,1)}">U</span>
+                            </div>
+                            <div class="comment-user-info">
+                                <span class="comment-user-name" th:text="${comment.userName}">Name</span>
+                                <span class="comment-time" th:text="${#temporals.format(comment.createdAt, 'dd/MM/yyyy HH:mm')}">time</span>
+                            </div>
+                        </div>
+                        <div class="comment-content" th:text="${comment.content}">Comment content</div>
+                    </div>
+                </div>
+                <div class="no-comments" th:unless="${post.commentList != null && !post.commentList.isEmpty()}">
+                    Aucun commentaire pour le moment.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gestion des likes
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const form = this.closest('form');
+                    const likeCount = this.nextElementSibling;
+                    
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams(new FormData(form))
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            const isLiked = this.classList.contains('liked');
+                            this.classList.toggle('liked');
+                            this.querySelector('span').textContent = isLiked ? '🤍' : '❤️';
+                            
+                            // Mise à jour du compteur
+                            const currentCount = parseInt(likeCount.textContent);
+                            likeCount.textContent = isLiked ? currentCount - 1 : currentCount + 1;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur lors du like:', error);
+                    });
+                });
+            });
+
+            // Gestion des commentaires
+            document.querySelector('.comment-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const textarea = this.querySelector('textarea');
+                
+                fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Erreur lors de l\'ajout du commentaire');
+                    }
+                    return response.json();
+                })
+                .then(comment => {
+                    const commentsList = document.querySelector('.comments-list');
+                    const noComments = document.querySelector('.no-comments');
+                    
+                    // Supprimer le message "Aucun commentaire" s'il existe
+                    if (noComments) {
+                        noComments.remove();
+                    }
+                    
+                    // Créer la liste des commentaires si elle n'existe pas
+                    if (!commentsList) {
+                        const newCommentsList = document.createElement('div');
+                        newCommentsList.className = 'comments-list';
+                        document.querySelector('.comments-section').insertBefore(newCommentsList, this);
+                        commentsList = newCommentsList;
+                    }
+                    
+                    // Créer le nouvel élément de commentaire
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    commentElement.innerHTML = `
+                        <div class="comment-header">
+                            <div class="comment-user-avatar">
+                                ${comment.userAvatar ? 
+                                    `<img src="${comment.userAvatar}" alt="Avatar" class="avatar-image">` :
+                                    `<span>${comment.userName.charAt(0)}</span>`
+                                }
+                            </div>
+                            <div class="comment-user-info">
+                                <span class="comment-user-name">${comment.userName}</span>
+                                <span class="comment-time">${new Date(comment.createdAt).toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <div class="comment-content">${comment.content}</div>
+                    `;
+                    
+                    commentsList.appendChild(commentElement);
+                    
+                    // Mettre à jour le compteur de commentaires
+                    const commentCount = document.querySelector('.stat:nth-child(2) span');
+                    const currentCount = parseInt(commentCount.textContent);
+                    commentCount.textContent = currentCount + 1;
+                    
+                    // Réinitialiser le formulaire
+                    textarea.value = '';
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Une erreur est survenue lors de l\'ajout du commentaire');
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

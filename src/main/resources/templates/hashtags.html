@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<head>
+    <title>Hashtags - Social Media App</title>
+    <th:block layout:fragment="custom-css">
+    <style>
+        .hashtags-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hashtag-item {
+            background-color: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+        }
+        
+        .hashtag-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .hashtag-link {
+            color: #1da1f2;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .hashtag-link:hover {
+            text-decoration: underline;
+        }
+        
+        .hashtag-count {
+            color: #657786;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .hashtag-posts {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #14171a;
+        }
+        
+        .hashtag-posts a {
+            color: #1da1f2;
+            text-decoration: none;
+        }
+        
+        .hashtag-posts a:hover {
+            text-decoration: underline;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 0;
+            color: #657786;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+    </style>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="hashtags-container">
+            <h2 class="mb-4">Tous les hashtags</h2>
+            
+            <div th:if="${#lists.isEmpty(hashtags)}" class="empty-state">
+                <i class="bi bi-hash"></i>
+                <h4>Aucun hashtag trouvé</h4>
+                <p>Commencez à utiliser des hashtags dans vos posts pour les voir apparaître ici.</p>
+            </div>
+            
+            <div th:each="hashtag : ${hashtags}" class="hashtag-item">
+                <a th:href="@{'/hashtags/' + ${hashtag.name}}" class="hashtag-link" th:text="'#' + ${hashtag.name}">#Hashtag</a>
+                <span class="hashtag-count" th:text="${hashtag.posts.size() + ' posts'}">0 posts</span>
+                
+                <div class="hashtag-posts" th:if="${!hashtag.posts.isEmpty()}">
+                    <p>Derniers posts :</p>
+                    <div th:each="post : ${hashtag.posts}" class="post-preview">
+                        <a th:href="@{'/posts/' + ${post.id}}" th:text="${#strings.length(post.content) > 100 ? #strings.substring(post.content, 0, 100) + '...' : post.content}">
+                            Post content
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

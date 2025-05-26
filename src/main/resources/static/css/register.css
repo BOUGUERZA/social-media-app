@@ -1,0 +1,107 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background-attachment: fixed;
+}
+
+.register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 2rem 0;
+}
+
+.register-card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.register-card .card-header {
+    background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+    border-radius: 15px 15px 0 0 !important;
+    padding: 1.2rem;
+}
+
+.register-card .card-header h3 {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    font-size: 1.5rem;
+}
+
+.register-card .card-body {
+    padding: 1.5rem;
+}
+
+.register-form .form-control {
+    border-radius: 8px;
+    padding: 0.6rem 1rem;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.register-form .form-control:focus {
+    box-shadow: 0 0 0 0.2rem rgba(75, 108, 183, 0.25);
+    border-color: #4b6cb7;
+}
+
+.register-form .form-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-top: 0.4rem;
+}
+
+.register-form .btn-primary {
+    background: linear-gradient(135deg, #4b6cb7 0%, #182848 100%);
+    border: none;
+    padding: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.register-form .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(75, 108, 183, 0.3);
+}
+
+.register-card .card-footer {
+    background: transparent;
+    border-top: 1px solid #e0e0e0;
+    padding: 1.2rem;
+}
+
+.register-card .card-footer a {
+    color: #4b6cb7;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.register-card .card-footer a:hover {
+    color: #182848;
+}
+
+.alert {
+    border-radius: 8px;
+    padding: 0.8rem;
+    margin-bottom: 1.2rem;
+    font-size: 0.9rem;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #495057;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.mb-4 {
+    margin-bottom: 1rem !important;
+} 

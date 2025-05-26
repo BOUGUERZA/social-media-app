@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="'#' + ${hashtag} + ' - Social Media App'">Hashtag - Social Media App</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f8fa;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            background-color: white;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+        }
+
+        .back-button {
+            text-decoration: none;
+            color: #1da1f2;
+            font-size: 14px;
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #14171a;
+            font-size: 18px;
+        }
+
+        .post {
+            background-color: white;
+            border-bottom: 1px solid #eee;
+            padding: 12px;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            flex: 1;
+        }
+
+        .username {
+            font-weight: 600;
+            color: #14171a;
+            font-size: 14px;
+        }
+
+        .handle {
+            color: #657786;
+            font-size: 12px;
+        }
+
+        .post-content {
+            font-size: 14px;
+            line-height: 1.4;
+            color: #14171a;
+            margin-bottom: 8px;
+            word-wrap: break-word;
+        }
+
+        .post-image {
+            margin: 8px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .post-image img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 20px;
+            margin-top: 8px;
+        }
+
+        .like-button, .comment-button {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #657786;
+            cursor: pointer;
+            font-size: 13px;
+            padding: 4px;
+        }
+
+        .like-button:hover, .comment-button:hover {
+            color: #1da1f2;
+        }
+
+        .like-button.liked {
+            color: #e0245e;
+        }
+
+        .no-posts {
+            text-align: center;
+            padding: 20px;
+            color: #657786;
+            font-size: 14px;
+        }
+
+        /* Styles pour les commentaires */
+        .comments-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .comment-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .comment-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 20px;
+            font-size: 14px;
+            resize: none;
+        }
+
+        .comment-submit {
+            background-color: #1da1f2;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .comment-submit:hover {
+            background-color: #1a91da;
+        }
+
+        .comment {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .comment:hover {
+            background-color: #f5f8fa;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-bottom: 4px;
+        }
+
+        .comment-username {
+            font-weight: 600;
+            font-size: 13px;
+            color: #14171a;
+        }
+
+        .comment-text {
+            font-size: 13px;
+            color: #14171a;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 4px;
+        }
+
+        .comment-like-button {
+            background: none;
+            border: none;
+            color: #657786;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 2px;
+        }
+
+        .comment-like-button:hover {
+            color: #1da1f2;
+        }
+
+        .comment-like-button.liked {
+            color: #e0245e;
+        }
+
+        .show-comments {
+            color: #1da1f2;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .show-comments:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 0;
+            }
+
+            .post {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="/home" class="back-button">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h1 th:text="'#' + ${hashtag}">#Hashtag</h1>
+        </div>
+
+        <div th:if="${posts.empty}" class="no-posts">
+            <p>Aucun post trouvé avec ce hashtag.</p>
+        </div>
+        
+        <div th:each="post : ${posts}" class="post">
+            <div class="post-header">
+                <img th:src="${post.user.profileImageUrl}" alt="Profile" class="avatar">
+                <div class="user-details">
+                    <div class="username" th:text="${post.user.displayName}">Username</div>
+                    <div class="handle" th:text="'@' + ${post.user.username}">@handle</div>
+                </div>
+            </div>
+            
+            <div class="post-content" th:text="${post.content}">Post content</div>
+            
+            <div th:if="${post.imageUrl != null}" class="post-image">
+                <img th:src="${post.imageUrl}" alt="Post image">
+            </div>
+            
+            <div class="post-actions">
+                <button class="like-button" 
+                        th:classappend="${post.likedByUser} ? 'liked' : ''"
+                        th:data-post-id="${post.id}">
+                    <i class="fas fa-heart"></i>
+                    <span th:text="${post.likes.size()}">0</span>
+                </button>
+                <button class="comment-button" th:data-post-id="${post.id}">
+                    <i class="fas fa-comment"></i>
+                    <span th:text="${post.comments.size()}">0</span>
+                </button>
+            </div>
+
+            <div class="comments-section" th:if="${post.comments.size() > 0}">
+                <div class="comment" th:each="comment : ${post.comments}">
+                    <img th:src="${comment.user.profileImageUrl}" alt="Profile" class="avatar">
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-username" th:text="${comment.user.displayName}">Username</span>
+                            <span class="handle" th:text="'@' + ${comment.user.username}">@handle</span>
+                        </div>
+                        <div class="comment-text" th:text="${comment.content}">Comment content</div>
+                        <div class="comment-actions">
+                            <button class="comment-like-button" 
+                                    th:data-comment-id="${comment.id}">
+                                <i class="fas fa-heart"></i>
+                                <span th:text="${comment.likes.size()}">0</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-form" th:if="${currentUser != null}">
+                <textarea class="comment-input" 
+                          th:data-post-id="${post.id}"
+                          placeholder="Écrire un commentaire..."></textarea>
+                <button class="comment-submit" th:data-post-id="${post.id}">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+        $(document).ready(function() {
+            // Like post
+            $('.like-button').click(function() {
+                const postId = $(this).data('post-id');
+                const button = $(this);
+                
+                $.post('/posts/' + postId + '/like', function(response) {
+                    if (response.liked) {
+                        button.addClass('liked');
+                    } else {
+                        button.removeClass('liked');
+                    }
+                    button.find('span').text(response.likesCount);
+                });
+            });
+
+            // Like comment
+            $('.comment-like-button').click(function() {
+                const commentId = $(this).data('comment-id');
+                const button = $(this);
+                
+                $.post('/comments/' + commentId + '/like', function(response) {
+                    if (response.liked) {
+                        button.addClass('liked');
+                    } else {
+                        button.removeClass('liked');
+                    }
+                    button.find('span').text(response.likesCount);
+                });
+            });
+
+            // Submit comment
+            $('.comment-submit').click(function() {
+                const postId = $(this).data('post-id');
+                const form = $(this).closest('.comment-form');
+                const input = form.find('.comment-input');
+                const content = input.val().trim();
+
+                if (content) {
+                    $.post('/posts/' + postId + '/comments', {
+                        content: content
+                    }, function(response) {
+                        // Ajouter le nouveau commentaire à la liste
+                        const commentHtml = `
+                            <div class="comment">
+                                <img src="${response.user.profileImageUrl}" alt="Profile" class="avatar">
+                                <div class="comment-content">
+                                    <div class="comment-header">
+                                        <span class="comment-username">${response.user.displayName}</span>
+                                        <span class="handle">@${response.user.username}</span>
+                                    </div>
+                                    <div class="comment-text">${response.content}</div>
+                                    <div class="comment-actions">
+                                        <button class="comment-like-button" data-comment-id="${response.id}">
+                                            <i class="fas fa-heart"></i>
+                                            <span>0</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Ajouter le commentaire au début de la section des commentaires
+                        const commentsSection = form.closest('.post').find('.comments-section');
+                        if (commentsSection.length === 0) {
+                            form.closest('.post').append('<div class="comments-section"></div>');
+                        }
+                        form.closest('.post').find('.comments-section').prepend(commentHtml);
+                        
+                        // Mettre à jour le compteur de commentaires
+                        const commentCount = form.closest('.post').find('.comment-button span');
+                        commentCount.text(parseInt(commentCount.text()) + 1);
+                        
+                        // Vider le champ de commentaire
+                        input.val('');
+                    });
+                }
+            });
+
+            // Gérer la touche Entrée pour soumettre un commentaire
+            $('.comment-input').keypress(function(e) {
+                if (e.which === 13 && !e.shiftKey) {
+                    e.preventDefault();
+                    $(this).closest('.comment-form').find('.comment-submit').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

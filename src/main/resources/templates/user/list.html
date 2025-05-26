@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<head>
+    <title th:text="${listType == 'Followers' ? 'Abonnés' : (listType == 'Following' ? 'Abonnements' : 'Suggestions')}">Liste d'utilisateurs</title>
+    <th:block layout:fragment="custom-css">
+    <style>
+        .user-card {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .profile-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+        .user-info {
+            flex-grow: 1;
+        }
+        .user-actions {
+            display: flex;
+            align-items: center;
+        }
+        .empty-list {
+            text-align: center;
+            padding: 50px 0;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 th:text="${listType == 'Followers' ? 'Abonnés' : (listType == 'Following' ? 'Abonnements' : 'Suggestions')}">Liste</h2>
+                <div class="btn-group" role="group" th:if="${listType != 'Suggestions'}">
+                    <a href="/users/followers" class="btn btn-outline-primary" th:classappend="${listType == 'Followers' ? 'active' : ''}">
+                        <i class="bi bi-people-fill"></i> Abonnés
+                    </a>
+                    <a href="/users/following" class="btn btn-outline-primary" th:classappend="${listType == 'Following' ? 'active' : ''}">
+                        <i class="bi bi-person-plus-fill"></i> Abonnements
+                    </a>
+                </div>
+            </div>
+
+            <div th:if="${#lists.isEmpty(users)}" class="empty-list">
+                <i class="bi bi-person-x" style="font-size: 3rem;"></i>
+                <h4 class="mt-3" th:text="${listType == 'Followers' ? 'Vous n\'avez pas encore d\'abonnés' : (listType == 'Following' ? 'Vous ne suivez personne pour le moment' : 'Aucune suggestion pour le moment')}">Aucun utilisateur</h4>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(users)}">
+                <div th:each="user : ${users}" class="user-card">
+                    <img th:src="${user.profileImageUrl != null ? user.profileImageUrl : 'https://via.placeholder.com/60'}" 
+                         alt="Profile" class="profile-image">
+                    
+                    <div class="user-info">
+                        <h5>
+                            <a th:href="@{'/users/' + ${user.username}}" class="text-decoration-none" 
+                               th:text="${user.displayName != null ? user.displayName : user.username}">Username</a>
+                        </h5>
+                        <p class="text-muted mb-0" th:text="'@' + ${user.username}">@username</p>
+                        <small th:if="${user.bio != null && !user.bio.isEmpty()}" class="text-muted" 
+                               th:text="${#strings.length(user.bio) > 100 ? #strings.substring(user.bio, 0, 100) + '...' : user.bio}">
+                            Bio
+                        </small>
+                    </div>
+                    
+                    <div class="user-actions">
+                        <div th:if="${currentUser.id != user.id}">
+                            <form th:if="${!currentUser.following.contains(user)}" th:action="@{'/users/' + ${user.username} + '/follow'}" method="post">
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-person-plus"></i> Suivre
+                                </button>
+                            </form>
+                            <form th:if="${currentUser.following.contains(user)}" th:action="@{'/users/' + ${user.username} + '/unfollow'}" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-person-dash"></i> Ne plus suivre
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <th:block layout:fragment="custom-scripts">
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Récupérer la barre de recherche existante
+                const searchInput = document.querySelector('.search-bar input');
+                const userCards = document.querySelectorAll('.user-card');
+                
+                if (searchInput) {
+                    // Ajouter un écouteur d'événement pour la recherche
+                    searchInput.addEventListener('input', function() {
+                        const filter = this.value.toUpperCase();
+                        
+                        userCards.forEach(card => {
+                            const username = card.querySelector('.user-info h5').textContent;
+                            const handle = card.querySelector('.user-info p').textContent;
+                            
+                            if (username.toUpperCase().indexOf(filter) > -1 || handle.toUpperCase().indexOf(filter) > -1) {
+                                card.style.display = '';
+                            } else {
+                                card.style.display = 'none';
+                            }
+                        });
+                    });
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>

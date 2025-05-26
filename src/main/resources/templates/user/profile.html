@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${profileUser.displayName != null ? profileUser.displayName : profileUser.username} + ' - Profil'">Profil Utilisateur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3px 30px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .logo img {
+            height: 50px;
+            width:180px;
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            margin-left:10px;
+            max-width: 500px;
+            background-color: #f0f0f0;
+            border-radius: 30px;
+            padding: 5px 15px;
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            background: transparent;
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        .search-bar .search-icon {
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .search-bar .search-icon:hover{
+            background-color: #dfdede;
+        }
+
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-container {
+            width: 32px;
+            height: 32px;
+            color: #25407c;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .icon-container:hover {
+            background-color: rgba(226, 88, 34, 0.1);
+            border-radius: 50%;
+        }
+
+        .profile-icon {
+            background-color: #25407c;
+            color: white;
+            font-weight: bold;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-item i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 5px 0;
+        }
+
+        .main-container {
+            display: flex;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .left-sidebar {
+            flex: 0.25;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-right: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-header {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #25407c;
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .profile-username {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .profile-bio {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #25407c;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .profile-actions {
+            margin-top: 20px;
+        }
+
+        .btn-follow {
+            background-color: #25407c;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-follow:hover {
+            background-color: #1a2f5d;
+        }
+
+        .btn-edit {
+            background-color: #8dcde3;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-edit:hover {
+            background-color: #7cb9cc;
+        }
+
+        .feed {
+            flex: 0.5;
+        }
+
+        .posts-container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .post {
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+
+        .post:last-child {
+            border-bottom: none;
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .post-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .post-user-info {
+            flex: 1;
+        }
+
+        .post-user-name {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .post-time {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .post-content {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .post-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 20px;
+            color: #666;
+        }
+
+        .post-action {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .right-sidebar {
+            flex: 0.25;
+            margin-left: 20px;
+        }
+
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-item {
+            padding: 10px 0;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #333;
+            display: flex;
+            align-items: center;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover {
+            color: #25407c;
+        }
+
+        .nav-icon {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .who-to-follow {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .follow-suggestion {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+
+        .follow-suggestion:hover {
+            background-color: #f0f2f5;
+        }
+
+        .follow-user-info {
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .follow-button {
+            background-color: #8dcde3;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .follow-button:hover {
+            background-color: #7cbfd5;
+        }
+
+        .see-more {
+            color: #65676b;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            display: block;
+            margin-top: 10px;
+            text-decoration: none;
+        }
+
+        .see-more:hover {
+            text-decoration: underline;
+        }
+
+        .no-suggestions {
+            text-align: center;
+            color: #65676b;
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #e6eef5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .avatar-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-user-handle {
+            color: #65676b;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <a href="/home">
+                <img th:src="@{/images/Logo.png}" alt="Logo">
+            </a>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher sur Siraj...">
+            <button class="search-icon">
+                🔍
+            </button>
+        </div>
+        <div class="header-icons">
+            <div class="icon-container" title="Dashboard">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L2 9l10 7 10-7-10-7zm0 16l-8-6v7l8 5 8-5v-7l-8 6z"/>
+                </svg>
+            </div>
+            <div class="icon-container" title="Notifications">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5S10.5 3.17 10.5 4v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                </svg>
+            </div>
+            <div class="icon-container" title="Messages">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                </svg>
+            </div>
+            <div class="profile-icon" title="Profil" onclick="toggleProfileMenu()">
+                P
+                <div class="profile-dropdown" id="profileDropdown">
+                    <a th:href="@{'/users/' + ${#authentication.name}}" class="dropdown-item">
+                        <i>👤</i> Mon Profil
+                    </a>
+                    <a href="/users/profile/edit" class="dropdown-item">
+                        <i>⚙️</i> Paramètres
+                    </a>
+                    <div class="dropdown-divider"></div>
+                    <form th:action="@{/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="dropdown-item" style="width: 100%; text-align: left; border: none; background: none; cursor: pointer;">
+                            <i>🚪</i> Déconnexion
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <div class="profile-header">
+                <img th:src="${profileUser.profileImageUrl != null ? profileUser.profileImageUrl : 'https://via.placeholder.com/120'}" 
+                     alt="Profile" class="profile-avatar">
+                <h2 class="profile-name" th:text="${profileUser.displayName != null ? profileUser.displayName : profileUser.username}">Username</h2>
+                <p class="profile-username" th:text="'@' + ${profileUser.username}">@username</p>
+                <p class="profile-bio" th:if="${profileUser.bio != null}" th:text="${profileUser.bio}">Bio</p>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" th:text="${posts.size()}">0</div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" th:text="${profileUser.followers.size()}">0</div>
+                        <div class="stat-label">Abonnés</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" th:text="${profileUser.following.size()}">0</div>
+                        <div class="stat-label">Abonnements</div>
+                    </div>
+                </div>
+
+                <div class="profile-actions">
+                    <div sec:authorize="isAuthenticated()" th:if="${#authentication.name != profileUser.username}">
+                        <form th:if="${isFollowing}" th:action="@{'/users/' + ${profileUser.username} + '/unfollow'}" method="post" style="display: inline;">
+                            <button type="submit" class="btn-follow">
+                                <i class="bi bi-person-dash"></i> Ne plus suivre
+                            </button>
+                        </form>
+                        <form th:unless="${isFollowing}" th:action="@{'/users/' + ${profileUser.username} + '/follow'}" method="post" style="display: inline;">
+                            <button type="submit" class="btn-follow">
+                                <i class="bi bi-person-plus"></i> Suivre
+                            </button>
+                        </form>
+                    </div>
+                    <div sec:authorize="isAuthenticated()" th:if="${#authentication.name == profileUser.username}">
+                        <a href="/users/profile/edit" class="btn-edit">
+                            <i class="bi bi-pencil"></i> Modifier le profil
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Navigation</h3>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="/home" class="nav-link">
+                        <span class="nav-icon">🏠</span> Accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">🔍</span> Explorer
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">🔔</span> Notifications
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">✉️</span> Messages
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <span class="nav-icon">📌</span> Enregistrements
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a th:href="@{'/users/' + ${#authentication.name}}" class="nav-link">
+                        <span class="nav-icon">👤</span> Profil
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Feed -->
+        <div class="feed">
+            <div class="posts-container">
+                <div th:if="${#lists.isEmpty(posts)}" class="no-posts" style="text-align:center; padding: 2rem;">
+                    Aucune publication pour le moment.
+                </div>
+                <div th:if="${!#lists.isEmpty(posts)}">
+                    <div th:each="post : ${posts}" class="post">
+                        <div class="post-header">
+                            <img th:src="${profileUser.profileImageUrl != null ? profileUser.profileImageUrl : 'https://via.placeholder.com/40'}" 
+                                 alt="Profile" class="post-avatar">
+                            <div class="post-user-info">
+                                <div class="post-user-name" th:text="${profileUser.displayName != null ? profileUser.displayName : profileUser.username}">Username</div>
+                                <div class="post-time" th:text="${#temporals.format(post.createdAt, 'dd MMM yyyy HH:mm')}">Date</div>
+                            </div>
+                        </div>
+                        <div class="post-content" th:text="${post.content}">Post content</div>
+                        <img th:if="${post.imageUrl != null}" th:src="${post.imageUrl}" class="post-image" alt="Post image">
+                        <div class="post-actions">
+                            <div class="post-action">
+                                <span>💬</span>
+                                <span th:text="${post.comments != null ? post.comments.size() : '0'}">0</span>
+                            </div>
+                            <div class="post-action">
+                                <span>❤️</span>
+                                <span th:text="${post.likes != null ? post.likes.size() : '0'}">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <div class="who-to-follow">
+                <div class="sidebar-title">Qui suivre</div>
+                
+                <div th:each="suggestion : ${suggestions}" class="follow-suggestion">
+                    <div class="user-avatar">
+                        <img th:if="${suggestion.profileImageUrl != null}" th:src="${suggestion.profileImageUrl}" alt="Avatar" class="avatar-image">
+                        <span th:unless="${suggestion.profileImageUrl != null}" th:text="${#strings.substring(suggestion.displayName,0,1)}">U</span>
+                    </div>
+                    <div class="follow-user-info">
+                        <div class="post-user-name" th:text="${suggestion.displayName}">Name</div>
+                        <div class="post-user-handle" th:text="@{${suggestion.username}}">@username</div>
+                    </div>
+                    <form th:action="@{'/users/' + ${suggestion.username} + '/follow'}" method="post" style="display: inline;">
+                        <button type="submit" class="follow-button">Suivre</button>
+                    </form>
+                </div>
+                
+                <div th:if="${#lists.isEmpty(suggestions)}" class="no-suggestions">
+                    Aucune suggestion pour le moment.
+                </div>
+                
+                <a th:href="@{/users/suggestions}" class="see-more">Voir plus...</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        function toggleProfileMenu() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Fermer le menu si on clique en dehors
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-icon') && !event.target.matches('.profile-icon *')) {
+                const dropdowns = document.getElementsByClassName('profile-dropdown');
+                for (let dropdown of dropdowns) {
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

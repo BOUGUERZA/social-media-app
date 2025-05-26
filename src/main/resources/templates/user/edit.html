@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/default}">
+<head>
+    <title>Modifier le profil</title>
+    <th:block layout:fragment="custom-css">
+    <style>
+        .profile-edit-container {
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .profile-edit-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .profile-edit-header h2 {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+        
+        .profile-edit-header p {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+        
+        .profile-image-container {
+            position: relative;
+            width: 200px;
+            margin: 0 auto 30px;
+        }
+        
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .profile-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .image-upload-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+        }
+        
+        .form-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+        }
+        
+        .form-section-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-section-title i {
+            margin-right: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--dark);
+        }
+        
+        .form-text {
+            margin-top: 5px;
+            font-size: 0.85rem;
+        }
+        
+        .custom-file-label::after {
+            content: "Parcourir";
+        }
+        
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin-top: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            display: none;
+        }
+        
+        .btn-action {
+            padding: 10px 25px;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .action-buttons {
+            margin-top: 30px;
+            text-align: center;
+        }
+    </style>
+    </th:block>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div class="profile-edit-container">
+            <!-- Header -->
+            <div class="profile-edit-header animate__animated animate__fadeIn">
+                <h2>Modifier votre profil</h2>
+                <p>Personnalisez votre profil pour vous démarquer</p>
+            </div>
+            
+            <!-- Alerts -->
+            <div th:if="${success}" class="alert alert-success animate__animated animate__fadeIn" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                <span th:text="${success}"></span>
+            </div>
+            
+            <div th:if="${error}" class="alert alert-danger animate__animated animate__fadeIn" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${error}"></span>
+            </div>
+            
+            <form th:action="@{/users/profile/edit}" th:object="${user}" method="post" enctype="multipart/form-data" class="animate__animated animate__fadeIn">
+                <!-- Current Profile Image -->
+                <div class="profile-image-container text-center">
+                    <img th:src="${user.profileImageUrl != null ? user.profileImageUrl : 'https://via.placeholder.com/200'}" 
+                         alt="Photo de profil" class="profile-image" id="currentProfileImage">
+                </div>
+                
+                <!-- Image Upload Section -->
+                <div class="image-upload-container">
+                    <h4 class="form-section-title">
+                        <i class="bi bi-image text-primary"></i> Photo de profil
+                    </h4>
+                    
+                    <!-- Upload New Profile Image -->
+                    <div class="form-group">
+                        <label class="form-label">Télécharger une nouvelle photo</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*" onchange="previewImage(this)">
+                        </div>
+                        <img id="preview" class="image-preview mt-3" alt="Aperçu de l'image" />
+                        <small class="form-text text-muted">Formats acceptés : JPG, PNG. Taille max : 5MB</small>
+                    </div>
+                </div>
+                
+                <!-- Profile Information Section -->
+                <div class="form-section">
+                    <h4 class="form-section-title">
+                        <i class="bi bi-person text-primary"></i> Informations personnelles
+                    </h4>
+                    
+                    <!-- Display Name -->
+                    <div class="form-group">
+                        <label for="displayName" class="form-label">Nom d'affichage</label>
+                        <input type="text" class="form-control" id="displayName" th:field="*{displayName}" placeholder="Votre nom d'affichage">
+                        <small class="form-text text-muted">C'est le nom qui sera affiché sur votre profil</small>
+                    </div>
+                    
+                    <!-- Bio -->
+                    <div class="form-group mb-0">
+                        <label for="bio" class="form-label">Biographie</label>
+                        <textarea class="form-control" id="bio" th:field="*{bio}" rows="4" placeholder="Parlez-nous de vous..."></textarea>
+                        <small class="form-text text-muted">Maximum 160 caractères</small>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary btn-action">
+                        <i class="bi bi-check-lg me-2"></i> Enregistrer les modifications
+                    </button>
+                    <a th:href="@{'/users/' + ${user.username}}" class="btn btn-outline-secondary btn-action ms-2">
+                        <i class="bi bi-x-lg me-2"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <th:block layout:fragment="custom-scripts">
+        <script>
+            // Preview the selected image
+            function previewImage(input) {
+                var preview = document.getElementById('preview');
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        preview.src = e.target.result;
+                        preview.style.display = 'block';
+                        
+                        // Add animation
+                        preview.classList.add('animate__animated', 'animate__fadeIn');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    preview.style.display = 'none';
+                }
+            }
+            
+            // Form validation
+            document.addEventListener('DOMContentLoaded', function() {
+                const bioField = document.getElementById('bio');
+                const maxLength = 160;
+                
+                if (bioField) {
+                    bioField.addEventListener('input', function() {
+                        const remaining = maxLength - this.value.length;
+                        const smallElement = this.nextElementSibling;
+                        
+                        if (remaining < 0) {
+                            this.value = this.value.substring(0, maxLength);
+                            smallElement.textContent = 'Maximum 160 caractères (limite atteinte)';
+                            smallElement.classList.add('text-danger');
+                        } else {
+                            smallElement.textContent = `Maximum 160 caractères (${remaining} restants)`;
+                            smallElement.classList.remove('text-danger');
+                        }
+                    });
+                    
+                    // Trigger on load to update counter
+                    bioField.dispatchEvent(new Event('input'));
+                }
+            });
+        </script>
+    </th:block>
+</body>
+</html>
