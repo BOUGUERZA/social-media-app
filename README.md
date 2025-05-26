@@ -28,6 +28,18 @@ Une application de médias sociaux complète similaire à Twitter, développée 
 - Flux d'actualités personnalisé
 - Page d'exploration pour découvrir de nouveaux contenus
 
+## Captures d'écran
+
+### Page d'accueil
+![Page d'accueil](src/main/resources/static/images/screenshots/home.png)
+
+### Profil utilisateur
+![Profil utilisateur](src/main/resources/static/images/screenshots/profile.png)
+
+
+### Exploration des hashtags
+![Exploration des hashtags](src/main/resources/static/images/screenshots/hashtags.png)
+
 ## Comment lancer l'application
 
 ```bash
@@ -44,7 +56,7 @@ mvn clean compile
 mvn spring-boot:run
 ```
 
-5. Accédez à l'application dans votre navigateur à l'adresse `http://localhost:8080`
+5. Accédez à l'application dans votre navigateur à l'adresse `http://localhost:8081`
 
 ## Comptes de démonstration
 
