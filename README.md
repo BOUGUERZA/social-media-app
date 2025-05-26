@@ -31,13 +31,13 @@ Une application de médias sociaux complète similaire à Twitter, développée 
 ## Captures d'écran
 
 ### Page d'accueil
-![Page d'accueil](https://github.com/BOUGUERZA/social-media-app/raw/main/src/main/resources/static/images/screenshots/home.png)
+![Page d'accueil](https://github.com/BOUGUERZA/social-media-app/raw/main/src/main/resources/static/images/screenshots/home.PNG)
 
 ### Profil utilisateur
-![Profil utilisateur](https://github.com/BOUGUERZA/social-media-app/raw/main/src/main/resources/static/images/screenshots/profile.png)
+![Profil utilisateur](https://github.com/BOUGUERZA/social-media-app/raw/main/src/main/resources/static/images/screenshots/profile.PNG)
 
 ### Exploration des hashtags
-![Exploration des hashtags](https://github.com/BOUGUERZA/social-media-app/raw/main/src/main/resources/static/images/screenshots/hashtags.png)
+![Exploration des hashtags](https://github.com/BOUGUERZA/social-media-app/raw/main/src/main/resources/static/images/screenshots/hashtags.PNG)
 
 ## Comment lancer l'application
 
